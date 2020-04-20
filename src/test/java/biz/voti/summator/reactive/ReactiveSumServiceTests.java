@@ -1,9 +1,10 @@
 package biz.voti.summator.reactive;
 
-import biz.voti.summator.mvc.MvcSumService;
 import biz.voti.summator.services.external.ExternalService;
+import biz.voti.summator.services.external.NumberGenerator;
 import org.junit.Assert;
 import org.junit.Test;
+import reactor.core.publisher.Mono;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -13,17 +14,20 @@ public class ReactiveSumServiceTests {
     @Test
     public void givenNumberShouldReturnGreaterValue() {
         // given
-        int number = 5;
+        int generatedNumber = 5;
         int externalValue = 10;
-        int expected = number + externalValue;
+        int expected = generatedNumber + externalValue;
+
+        NumberGenerator numberGenerator = mock(NumberGenerator.class);
+        when(numberGenerator.getValue()).thenReturn(generatedNumber);
 
         ExternalService externalService = mock(ExternalService.class);
-        when(externalService.getValue()).thenReturn(externalValue);
+        when(externalService.getNextAsync()).thenReturn(Mono.just(externalValue));
 
-        MvcSumService sumService = new MvcSumService(externalService);
+        ReactiveSumService sumService = new ReactiveSumService(numberGenerator, externalService);
 
         // when
-        int result = sumService.addToExternalInt(number);
+        int result = sumService.sum().block();
 
         // then
         Assert.assertEquals(expected, result);

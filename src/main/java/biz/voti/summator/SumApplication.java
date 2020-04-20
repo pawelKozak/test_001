@@ -1,6 +1,5 @@
 package biz.voti.summator;
 
-import biz.voti.summator.mvc.MvcSumConfiguration;
 import biz.voti.summator.reactive.ReactiveSumConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,7 +13,6 @@ public class SumApplication {
         Class<?>[] configurations = {
                 SumApplication.class,
                 ServerConfiguration.class,
-                MvcSumConfiguration.class,
                 ReactiveSumConfiguration.class
         };
 
